@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Editor from '@monaco-editor/react'
 import io from 'socket.io-client'
 import './App.css'
 
@@ -88,17 +87,22 @@ function App() {
       <div className="main-content">
         <div className="editor-section">
           <h3>Kod:</h3>
-          <Editor
-            height="400px"
-            language={language}
+          <textarea
             value={code}
-            onChange={(value) => setCode(value || '')}
-            theme="vs-dark"
-            options={{
-              fontSize: 14,
-              minimap: { enabled: false },
-              scrollBeyondLastLine: false,
+            onChange={(e) => setCode(e.target.value)}
+            style={{
+              width: '100%',
+              height: '400px',
+              background: '#1e1e1e',
+              color: '#d4d4d4',
+              border: '1px solid #3e3e42',
+              padding: '1rem',
+              fontFamily: 'Courier New, monospace',
+              fontSize: '14px',
+              resize: 'none',
+              borderRadius: '4px'
             }}
+            placeholder="Wpisz kod tutaj..."
           />
         </div>
         
