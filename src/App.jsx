@@ -9,12 +9,24 @@ function App() {
   const [output, setOutput] = useState('')
   const [socket, setSocket] = useState(null)
   const [isRunning, setIsRunning] = useState(false)
+  const [editorLoaded, setEditorLoaded] = useState(false)
+  const [editorFailed, setEditorFailed] = useState(false)
 
   useEffect(() => {
     const newSocket = io('http://localhost:3000')
     setSocket(newSocket)
 
-    return () => newSocket.close()
+    // Fallback timer for Monaco Editor
+    const editorTimeout = setTimeout(() => {
+      if (!editorLoaded) {
+        setEditorFailed(true)
+      }
+    }, 3000)
+
+    return () => {
+      newSocket.close()
+      clearTimeout(editorTimeout)
+    }
   }, [])
 
   const runCode = async () => {
@@ -88,18 +100,53 @@ function App() {
       <div className="main-content">
         <div className="editor-section">
           <h3>Kod:</h3>
-          <Editor
-            height="400px"
-            language={language}
-            value={code}
-            onChange={(value) => setCode(value || '')}
-            theme="vs-dark"
-            options={{
-              fontSize: 14,
-              minimap: { enabled: false },
-              scrollBeyondLastLine: false,
-            }}
-          />
+          {editorFailed ? (
+            <textarea
+              className="fallback-editor"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Wpisz swój kod tutaj..."
+              style={{
+                width: '100%',
+                height: '400px',
+                backgroundColor: '#1e1e1e',
+                color: '#d4d4d4',
+                border: 'none',
+                fontFamily: '"Courier New", monospace',
+                fontSize: '14px',
+                padding: '12px',
+                resize: 'none',
+                outline: 'none',
+                borderRadius: '4px'
+              }}
+            />
+          ) : (
+            <Editor
+              height="400px"
+              language={language}
+              value={code}
+              onChange={(value) => setCode(value || '')}
+              theme="vs-dark"
+              options={{
+                fontSize: 14,
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+              }}
+              loading={
+                <div style={{
+                  height: '400px',
+                  backgroundColor: '#1e1e1e',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#d4d4d4'
+                }}>
+                  Ładowanie edytora...
+                </div>
+              }
+              onMount={() => setEditorLoaded(true)}
+            />
+          )}
         </div>
         
         <div className="output-section">
