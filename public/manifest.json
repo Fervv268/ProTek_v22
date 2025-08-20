@@ -1,0 +1,16 @@
+{
+  "name": "Code Runner Online",
+  "short_name": "CodeRunner",
+  "description": "Online code execution platform for Python and JavaScript",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1e1e",
+  "theme_color": "#007acc",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
