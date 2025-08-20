@@ -25,14 +25,14 @@ app.post('/run', (req, res) => {
   let cmd, args;
   if (lang === 'python') { cmd = 'python3'; args = ['-c', code]; }
   else if (lang === 'javascript') { cmd = 'node'; args = ['-e', code]; }
-  else { io.to(jobId).emit('log', \`Nieobsługiwany język: \${lang}\`); return; }
+  else { io.to(jobId).emit('log', `Nieobsługiwany język: ${lang}`); return; }
 
   const proc = spawn(cmd, args);
   proc.stdout.on('data', d => io.to(jobId).emit('log', d.toString()));
   proc.stderr.on('data', d => io.to(jobId).emit('log', d.toString()));
-  proc.on('close', code => io.to(jobId).emit('log', \`Proces zakończony (kod \${code})\`));
+  proc.on('close', code => io.to(jobId).emit('log', `Proces zakończony (kod ${code})`));
 });
 
 server.listen(process.env.PORT || 3000, () =>
-  console.log(\`Backend działa na porcie \${process.env.PORT || 3000}\`)
+  console.log(`Backend działa na porcie ${process.env.PORT || 3000}`)
 );
